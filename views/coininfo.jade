@@ -1,0 +1,120 @@
+extends layout
+
+block content
+    .col-md-12(style="margin-bottom: 4%")
+        .panel.panel-default.coin-info
+            .panel-heading
+                strong #{settings.locale.coininfo_head}
+            .panel-body
+                .row
+                    .col-md-3
+                        .panel.panel-default
+                            .panel-heading
+                                strong #{settings.locale.coininfo_basicinfo}
+                            .panel-body
+                                    // each item in coininfo.basic_info_links
+                                    div
+                                        if settings.display.twitter
+                                                    a#twitter(href="https://twitter.com/#{settings.twitter}", target='_blank')
+                                                        //span.glyphicon.fa.fa-twitter
+                                                        span &nbsp;Twitter
+                                                    br
+                                        if settings.display.facebook
+                                                    a#facebook(href="https://www.facebook.com/#{settings.facebook}", target='_blank')
+                                                        //span.glyphicon.fa.fa-facebook
+                                                        span &nbsp;Facebook
+                                                    br
+                                        if settings.display.googleplus
+                                                    a#googleplus(href="https://plus.google.com/#{settings.googleplus}", target='_blank')
+                                                        //span.glyphicon.fa.fa-google-plus
+                                                        span &nbsp;Google+
+                                                    br
+                                        if settings.display.youtube
+                                                    a#youtube(href="https://www.youtube.com/channel/#{settings.youtube}", target='_blank')
+                                                        //span.glyphicon.fa.fa-youtube
+                                                        span &nbsp;Youtube
+                                                    br
+                                        if settings.display.discordapp
+                                                    a#discord(href="https://discordapp.com/#{settings.discordapp}", target='_blank')
+                                                        //<svg style="width: 16px;vertical-align: bottom;" aria-hidden="true" data-prefix="fab" data-icon="discord" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="svg-inline--fa fa-discord fa-w-14 fa-lg"><path fill="currentColor" d="M297.216 243.2c0 15.616-11.52 28.416-26.112 28.416-14.336 0-26.112-12.8-26.112-28.416s11.52-28.416 26.112-28.416c14.592 0 26.112 12.8 26.112 28.416zm-119.552-28.416c-14.592 0-26.112 12.8-26.112 28.416s11.776 28.416 26.112 28.416c14.592 0 26.112-12.8 26.112-28.416.256-15.616-11.52-28.416-26.112-28.416zM448 52.736V512c-64.494-56.994-43.868-38.128-118.784-107.776l13.568 47.36H52.48C23.552 451.584 0 428.032 0 398.848V52.736C0 23.552 23.552 0 52.48 0h343.04C424.448 0 448 23.552 448 52.736zm-72.96 242.688c0-82.432-36.864-149.248-36.864-149.248-36.864-27.648-71.936-26.88-71.936-26.88l-3.584 4.096c43.52 13.312 63.744 32.512 63.744 32.512-60.811-33.329-132.244-33.335-191.232-7.424-9.472 4.352-15.104 7.424-15.104 7.424s21.248-20.224 67.328-33.536l-2.56-3.072s-35.072-.768-71.936 26.88c0 0-36.864 66.816-36.864 149.248 0 0 21.504 37.12 78.08 38.912 0 0 9.472-11.52 17.152-21.248-32.512-9.728-44.8-30.208-44.8-30.208 3.766 2.636 9.976 6.053 10.496 6.4 43.21 24.198 104.588 32.126 159.744 8.96 8.96-3.328 18.944-8.192 29.44-15.104 0 0-12.8 20.992-46.336 30.464 7.68 9.728 16.896 20.736 16.896 20.736 56.576-1.792 78.336-38.912 78.336-38.912z" class=""></path></svg>
+                                                        span &nbsp;Discord
+                                                    br
+                                        if settings.display.telegram
+                                                    a#telegram(href="https://t.me/#{settings.telegram}", target='_blank')
+                                                        //span.glyphicon.fa.fa-telegram
+                                                        span &nbsp;Telegram
+                                                    br
+                                        if settings.display.bitcointalk
+                                                    a#bitcoin(href="https://bitcointalk.org/#{settings.bitcointalk}", target='_blank')
+                                                        //span.glyphicon.fa.fa-btc
+                                                        span &nbsp;Bitcointalk
+                                                    br
+                                                    a#github(href="https://github.com/winwin-official", target='_blank')
+                                                        //span.glyphicon.fa.fa-github
+                                                        span &nbsp;Github
+                    .col-md-9
+                        .panel.panel-default
+                            .panel-body.text-center
+                                .row.info-row
+                                    .col-md-4
+                                        img(src='#{settings.logo}', style='')
+                                    .col-md-4
+                                        h2 #{settings.coin} &nbsp(#{settings.symbol})
+                                        span #{lastPriceBtc} BTC
+                                        if lastPriceUsd
+                                            span  / $#{lastPriceUsd} &nbsp;
+                                            - pricePercChangeClass = pricePercChange24h ? (pricePercChange24h.substr(0, 1) == '-' ? 'text-danger' : 'text-success') : 'text-default';
+                                            span(class=pricePercChangeClass) (#{pricePercChange24h}%)
+                                .row.info-row
+                                    .col-md-4
+                                        h4 #{marketCapUsd}
+                                        h5.sub Market Cap (USD)
+                                    .col-md-4
+                                        h4 #{supply} #{settings.symbol}
+                                        h5.sub Current Coin supply
+                                    .col-md-4
+                                        h4 #{coinsLocked}
+                                        h5.sub Coins locked (#{coinsLockedPerc}%)
+                                .row.info-row
+                                    .col-md-4
+                                        h4 #{activeMasternodes} / #{totalMasternodes}
+                                        h5.sub Active / Total nodes
+                                    .col-md-4
+                                        h4 #{mnRequiredCoins} #{settings.symbol}
+                                        h5.sub Required coins
+                                    .col-md-4
+                                        h4
+                                            span #{nodeWorthBtc} BTC
+                                                //if nodeWorthUsd
+                                                span  / $#{nodeWorthUsd}
+                                        h5.sub Node worth
+                                .row
+                                    <hr>
+                                .row.text-left
+                                    .col-md-12
+                                        h4 Estimated earnings (#{settings.symbol}/BTC/USD)
+                                .row.earnings
+                                    .col-xs-2.col-md-offset-3.text-right
+                                        div Daily
+                                    .col-xs-10.col-md-7.text-left
+                                        div #{dailyCoin} #{settings.symbol} / #{dailyBtc} BTC / $#{dailyUsd}
+                                .row.earnings
+                                    .col-xs-2.col-md-offset-3.text-right
+                                        div Weekly
+                                    .col-xs-10.col-md-7.text-left
+                                        div #{weeklyCoin} #{settings.symbol} / #{weeklyBtc} BTC / $#{weeklyUsd}
+                                .row.earnings
+                                    .col-xs-2.col-md-offset-3.text-right
+                                        div Monthly
+                                    .col-xs-10.col-md-7.text-left
+                                        div #{monthlyCoin} #{settings.symbol} / #{monthlyBtc} BTC / $#{monthlyUsd}
+                                .row.earnings
+                                    .col-xs-2.col-md-offset-3.text-right
+                                        div Yearly
+                                    .col-xs-10.col-md-7.text-left
+                                        div #{yearlyCoin} #{settings.symbol} / #{yearlyBtc} BTC / $#{yearlyUsd}
+                                if (calculatedBasedOnRealData)
+                                    .row &nbsp;
+                                    .row.earnings
+                                        .col-md-offset-5.text-left
+                                            em Calculations are based on real masternode payment data over the last 24h.

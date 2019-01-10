@@ -1,0 +1,285 @@
+doctype html
+html
+  head
+    title= settings.title
+    meta(name="google" content="notranslate")
+    link(rel='stylesheet', href='/themes/#{settings.theme}/bootstrap.min.css')
+    link(rel='stylesheet', href='/vendor/jqplot/jquery.jqplot.css')
+    link(rel='stylesheet', href='//cdn.datatables.net/plug-ins/725b2a2115b/integration/bootstrap/3/dataTables.bootstrap.css')
+    link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js')
+    script(src='//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js')
+    script(src='/vendor/jqplot/jquery.jqplot.min.js')
+    script(src='/vendor/jqplot/plugins/jqplot.dateAxisRenderer.min.js')
+    script(src='/vendor/jqplot/plugins/jqplot.ohlcRenderer.min.js')
+    script(src='/vendor/jqplot/plugins/jqplot.highlighter.min.js')
+    script(src='/vendor/jqplot/plugins/jqplot.pieRenderer.min.js')
+    script(src='/vendor/jqplot/plugins/jqplot.barRenderer.min.js')
+    script(src='/vendor/jqplot/plugins/jqplot.categoryAxisRenderer.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js')
+    script(src='//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js')  
+    script(src='//cdn.datatables.net/responsive/1.0.2/js/dataTables.responsive.js')
+    script(src='//cdn.datatables.net/plug-ins/725b2a2115b/integration/bootstrap/3/dataTables.bootstrap.js')
+    script(src='/javascripts/chart.js')
+
+    //script(async, src="https://www.googletagmanager.com/gtag/js?id=UA-73370264-3")
+    //script.
+    //    $(document).ready(function(){
+    //      window.dataLayer = window.dataLayer || [];
+    //      function gtag(){dataLayer.push(arguments);}
+    //      gtag('js', new Date());
+    //
+    //      gtag('config', 'UA-73370264-3');
+    //    });
+    script(src='/javascripts/analytics.js')
+    script.
+      $(document).ready(function(){
+        $('##{active}').addClass('active');
+        function update_stats(){   
+          $.ajax({url: '/ext/summary', success: function(json){
+              console.log(json.data[0].masternodesCount.total)
+              console.log($("#masternodes")[0])
+            $("#supply").text(json.data[0].supply);
+            $("#difficulty").text(json.data[0].difficulty);
+            $("#difficultyHybrid").text(json.data[0].difficultyHybrid);
+            $("#masternodes").text(json.data[0].masternodesCount.total);
+            $("#masternodesHybrid").text(json.data[0].masternodesCount.total);
+            $("#hashrate").text(json.data[0].hashrate);
+            $("#lastPrice").text(json.data[0].lastPrice.toFixed(8));
+            $("#lblConnections").text(json.data[0].connections + ' connections');
+            $("#lblBlockcount").text(json.data[0].blockcount + ' blocks');
+            $("#lblX1").text(' ');
+          }});
+        }
+        $('.block-last-next').tooltip({
+          animation: true,
+          delay: { hide: 500 },   
+        });
+        $('.history-table').dataTable( {        
+          searching: false,
+          ordering: false,
+          responsive: true
+        });
+        $('.iquidus').css('color',$('.table').css('color'));
+        $(window).resize(function () { 
+          $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust();
+        });
+        setInterval( function() {
+          update_stats();
+        }, 60000);
+        update_stats();
+      });
+  body
+    - function format_unixtime(unixtime) {
+      - var a = new Date(unixtime*1000);  
+      - var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      - var year = a.getFullYear();
+      - var month = months[a.getMonth()];
+      - var date = a.getDate();
+      - var hour = a.getHours();
+      - var min = a.getMinutes();
+      - var sec = a.getSeconds();
+      - var suffix = 'th'
+      if date == 1 || date == 21 || date == 31
+        - suffix = 'st'
+      if date == 2 || date == 22 || date == 32
+        - suffix = 'nd'
+      if date == 3 || date == 23
+        - suffix = 'rd'
+      if hour < 10
+        - hour = '0' + hour
+      if min < 10
+        - min = '0' + min
+      if sec < 10
+        - sec = '0' + sec
+      - var time = date + suffix + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;   
+      - return time
+    -  };
+    .nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
+      .container-fluid
+        .navbar-header
+          button.navbar-toggle(type='button', data-toggle='collapse', data-target='#navbar-collapse')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href='https://win.win/' target='_blank')
+            img(src='#{settings.logo}', style='max-width:100%;max-height:100%;')
+        .collapse.navbar-collapse(id='navbar-collapse')
+          ul.nav.navbar-nav
+            li#home
+              a.navbar-link(href='/')
+                span.glyphicon.glyphicon-home
+                span.menu-text #{settings.locale.menu_home}
+            if settings.heavy == true
+              li#reward
+                a.navbar-link(href='/reward')
+                  span.fa.fa-star
+                  span.menu-text #{settings.locale.menu_reward}
+            if settings.display.movement == true
+              li#movement 
+                a.navbar-link.loading(href='/movement') 
+                  span.fa.fa-money
+                  span.menu-text #{settings.locale.menu_movement}
+            if settings.display.network == true
+              li#network
+                a.navbar-link(href='/network')
+                  span.fa.fa-share-alt
+                  span.menu-text #{settings.locale.menu_network}
+            if settings.display.richlist == true
+              li#richlist
+                a.navbar-link(href='/richlist')
+                  span.fa.fa-btc
+                  span.menu-text #{settings.locale.menu_richlist}
+            //if settings.display.markets == true
+            //  li#markets
+            //    a.navbar-link.loading(href='/markets/#{settings.markets.default}')
+            //      span.fa.fa-line-chart
+            //      span.menu-text #{settings.locale.menu_markets}
+            if settings.display.masternodes == true
+              li#masternodeslist
+                a.navbar-link.loading(href='/masternodes')
+                  span.fa.fa-server
+                  span.menu-text #{settings.locale.menu_masternodes}
+            if settings.display.coininfo == true
+              li#coininfo
+                a.navbar-link.loading(href='/coininfo')
+                  span.fa.fa-graduation-cap
+                  span.menu-text #{settings.locale.menu_coininfo}
+            if settings.display.api == true
+              li#info
+                a.navbar-link(href='/info')
+                  span.glyphicon.glyphicon-info-sign
+                  span.menu-text #{settings.locale.menu_api}
+    .col-md-12
+      .row.text-center
+        .col-md-2.col-md-offset-1
+          .panel.panel-default.hidden-sm.hidden-xs
+            .panel-heading
+              if settings.nethash_units == 'K'
+                strong #{settings.locale.network} (KH/s)
+              else if settings.nethash_units == 'M'
+                strong #{settings.locale.network} (MH/s)
+              else if settings.nethash_units == 'G'
+                strong #{settings.locale.network} (GH/s)
+              else if settings.nethash_units == 'T'
+                strong #{settings.locale.network} (TH/s)
+              else if settings.nethash_units == 'P'
+                strong #{settings.locale.network} (PH/s)
+              else if settings.nethash_units == 'H'
+                strong #{settings.locale.network} (H/s)
+            .panel-body
+              if settings.index.difficulty == 'Hybrid'
+               label#hashrate - 
+               <br>
+               label#lblX1  
+              else  
+               label#hashrate - 
+        .col-md-2
+          .panel.panel-default.hidden-sm.hidden-xs
+            .panel-heading
+              strong #{settings.locale.difficulty}
+            .panel-body
+              if settings.index.difficulty == 'Hybrid'
+               label#difficulty -
+               <br>
+               label#difficultyHybrid -
+              else
+               label#difficulty -
+        .col-md-2
+          .panel.panel-default.hidden-sm.hidden-xs
+            .panel-heading
+              strong #{settings.locale.ex_supply} (#{settings.symbol})
+            .panel-body
+              if settings.index.difficulty == 'Hybrid'
+               label#supply - 
+               <br>
+               label#lblX1
+              else
+               label#supply -  
+        .col-md-2
+          .panel.panel-default.hidden-sm.hidden-xs
+            .panel-heading
+              strong #{settings.markets.exchange} Price
+            .panel-body
+              if settings.index.difficulty == 'Hybrid'
+               label#lastPrice -
+               <br>
+               label#lblX1
+              else
+               label#lastPrice -
+        .col-md-2
+          .panel.panel-default.hidden-sm.hidden-xs
+            .panel-heading
+              strong #{settings.locale.ex_masternodes}
+            .panel-body
+              if settings.index.difficulty == 'Hybrid'
+                label#masternodes -
+                <br>
+                label#masternodesHybrid
+              else
+                label#masternodes -
+                 
+      .row.text-center(style='margin-top:10px;margin-bottom:20px;')
+        form.form-inline(method='post', action='/search')      
+          #index-search.form-group
+            input.form-control(type='text', name='search', placeholder='#{settings.locale.ex_search_message}', style='min-width:80%;margin-right:5px;')
+            button.btn.btn-success(type='submit') #{settings.locale.ex_search_button}
+    block content
+    .navbar.navbar-default.navbar-fixed-bottom
+      .row
+        .col-md-4.col-xs-12.navbar-nav-mobile
+          div
+            if settings.display.twitter
+              ul.nav.navbar-nav.my-footer-navbar
+                li.pull-left
+                  a#twitter-icon(href="https://twitter.com/#{settings.twitter}", target='_blank')
+                    span.glyphicon.fa.fa-twitter
+            if settings.display.facebook
+              ul.nav.navbar-nav.my-footer-navbar
+                li.pull-left
+                  a#facebook-icon(href="https://www.facebook.com/#{settings.facebook}", target='_blank')
+                    span.glyphicon.fa.fa-facebook
+            if settings.display.googleplus
+              ul.nav.navbar-nav.my-footer-navbar
+                li.pull-left
+                  a#googleplus-icon(href="https://plus.google.com/#{settings.googleplus}", target='_blank')
+                    span.glyphicon.fa.fa-google-plus
+            if settings.display.youtube
+              ul.nav.navbar-nav.my-footer-navbar
+                li.pull-left
+                  a#youtube-icon(href="https://www.youtube.com/channel/#{settings.youtube}", target='_blank')
+                    span.glyphicon.fa.fa-youtube
+            if settings.display.discordapp
+              ul.nav.navbar-nav.my-footer-navbar
+                li.pull-left
+                  a#discord-icon(href="https://discordapp.com/#{settings.discordapp}", target='_blank')
+                    <svg style="width: 16px;vertical-align: bottom;" aria-hidden="true" data-prefix="fab" data-icon="discord" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="svg-inline--fa fa-discord fa-w-14 fa-lg"><path fill="currentColor" d="M297.216 243.2c0 15.616-11.52 28.416-26.112 28.416-14.336 0-26.112-12.8-26.112-28.416s11.52-28.416 26.112-28.416c14.592 0 26.112 12.8 26.112 28.416zm-119.552-28.416c-14.592 0-26.112 12.8-26.112 28.416s11.776 28.416 26.112 28.416c14.592 0 26.112-12.8 26.112-28.416.256-15.616-11.52-28.416-26.112-28.416zM448 52.736V512c-64.494-56.994-43.868-38.128-118.784-107.776l13.568 47.36H52.48C23.552 451.584 0 428.032 0 398.848V52.736C0 23.552 23.552 0 52.48 0h343.04C424.448 0 448 23.552 448 52.736zm-72.96 242.688c0-82.432-36.864-149.248-36.864-149.248-36.864-27.648-71.936-26.88-71.936-26.88l-3.584 4.096c43.52 13.312 63.744 32.512 63.744 32.512-60.811-33.329-132.244-33.335-191.232-7.424-9.472 4.352-15.104 7.424-15.104 7.424s21.248-20.224 67.328-33.536l-2.56-3.072s-35.072-.768-71.936 26.88c0 0-36.864 66.816-36.864 149.248 0 0 21.504 37.12 78.08 38.912 0 0 9.472-11.52 17.152-21.248-32.512-9.728-44.8-30.208-44.8-30.208 3.766 2.636 9.976 6.053 10.496 6.4 43.21 24.198 104.588 32.126 159.744 8.96 8.96-3.328 18.944-8.192 29.44-15.104 0 0-12.8 20.992-46.336 30.464 7.68 9.728 16.896 20.736 16.896 20.736 56.576-1.792 78.336-38.912 78.336-38.912z" class=""></path></svg>
+            if settings.display.telegram
+              ul.nav.navbar-nav.my-footer-navbar
+                li.pull-left
+                  a#telegram-icon(href="https://t.me/#{settings.telegram}", target='_blank')
+                    span.glyphicon.fa.fa-telegram
+            if settings.display.bitcointalk
+              ul.nav.navbar-nav.my-footer-navbar
+                li.pull-left
+                  a#bitcoin-icon(href="https://bitcointalk.org/#{settings.bitcointalk}", target='_blank')
+                    span.glyphicon.fa.fa-btc
+              ul.nav.navbar-nav.my-footer-navbar
+                li.pull-left
+                  a#github-icon(href="https://github.com/winwin-official", target='_blank')
+                    span.glyphicon.fa.fa-github
+        .col-md-4.col-xs-12
+          ul.nav
+            li.text-center(style='margin-left:80px;margin-right:80px;')
+              p(style='margin-top:15px;')
+                a.navbar-link(href='https://github.com/winwin-official', target='_blank') TWINS Blockchain Explorer
+        .col-md-4.col-xs-12.navbar-nav-mobile
+          div
+            span.connections.pull-right
+              label#lblBlockcount.label.label-default -
+              label#lblConnections.label.label-default -
+
+
+              

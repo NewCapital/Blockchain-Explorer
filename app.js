@@ -74,6 +74,22 @@ app.use('/ext/getmoneysupply', function(req,res){
   });
 });
 
+app.use('/ext/getwalletscount', function(req,res){
+  if (settings.display.richlist == true ) {
+    db.get_walletscount(function(count){
+      res.send({total_wallets_count: count});
+    });
+  }
+});
+
+app.use('/ext/getnotemptywalletscount', function(req,res){
+  if (settings.display.richlist == true ) {
+    db.get_not_empty_wallet_scount(function(count){
+      res.send({not_empty_wallets_count: count});
+    });
+  }
+});
+
 app.use('/ext/getaddress/:hash', function(req,res){
   db.get_address(req.param('hash'), function(address){
     if (address) {

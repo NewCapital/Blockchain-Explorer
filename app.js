@@ -94,7 +94,7 @@ app.use('/ext/getstats', function(req,res){
             return_hash.block_count = blockcount;
 
             db.get_address('WmXhHCV6PjXjxJdSXPeC8e4PrY8qTQMBFg', function(address){
-              return_hash.dev_wallet_balance = (address.balance / 100000000).toString().replace(/(^-+)/mg, '');
+              return_hash.dev_wallet_balance = (address.balance / 100000000);
 
               var coinsLocked = masterNodesCount.total * settings.coininfo.masternode_required;
               var coinsLockedPerc = coinsLocked / (stats.supply/100);

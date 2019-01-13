@@ -54,7 +54,7 @@ app.use('/api', bitcoinapi.app);
 var addToHeader = function (req, res, next) {
     console.log("add to header called ... " + req.url);
     // res.header("charset", "utf-8")
-    var allowedOrigins = ['http://localhost:3001', 'http://test.win.win', "https://localhost:3001", 'http://map.win.win', 'https://map.win.win', 'http://167.99.83.22','http://167.99.83.22:3001'];
+    var allowedOrigins = ['https://win.win', 'http://localhost:3001', 'http://test.win.win', "https://localhost:3001", 'http://map.win.win', 'https://map.win.win', 'http://167.99.83.22','http://167.99.83.22:3001'];
     var origin = req.headers.origin;
     res.header("Access-Control-Allow-Origin", "http://localhost:3001");
     if(allowedOrigins.indexOf(origin) > -1){

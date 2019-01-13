@@ -76,6 +76,7 @@ app.use('/ext/getmoneysupply', function(req,res){
 
 app.use('/ext/getstats', function(req,res){
   var return_hash = { };
+  db.get_stats(settings.coin, function(stats){
 
   db.get_walletscount(function(total_wallets_count){
      return_hash.total_wallets_count = total_wallets_count;
@@ -91,13 +92,22 @@ app.use('/ext/getstats', function(req,res){
 
           lib.get_blockcount(function (blockcount) {
             return_hash.block_count = blockcount;
-            res.send(return_hash);
-          });
 
+            db.get_address('WmXhHCV6PjXjxJdSXPeC8e4PrY8qTQMBFg', function(address){
+              return_hash.dev_wallet_balance = (address.balance / 100000000).toString().replace(/(^-+)/mg, '');
+
+              var coinsLocked = masterNodesCount.total * settings.coininfo.masternode_required;
+              var coinsLockedPerc = coinsLocked / (stats.supply/100);
+
+              return_hash.twins_locked = coinsLockedPerc.toFixed(2);
+              res.send(return_hash);
+            });
+          });
         });
       });
     });
   });
+    });
 });
 
 app.use('/ext/getwalletscount', function(req,res){

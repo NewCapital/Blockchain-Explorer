@@ -74,6 +74,32 @@ app.use('/ext/getmoneysupply', function(req,res){
   });
 });
 
+app.use('/ext/getstats', function(req,res){
+  var return_hash = { };
+
+  db.get_walletscount(function(total_wallets_count){
+     return_hash.total_wallets_count = total_wallets_count;
+
+     db.get_active_wallets_count(function(active_wallets_count){
+      return_hash.active_wallets_count = active_wallets_count;
+
+      lib.get_supply(function(supply){
+        return_hash.money_supply = supply;
+
+        lib.get_masternodecount(function(masterNodesCount) {
+          return_hash.masternode_count = masterNodesCount.total;
+
+          lib.get_blockcount(function (blockcount) {
+            return_hash.block_count = blockcount;
+            res.send(return_hash);
+          });
+
+        });
+      });
+    });
+  });
+});
+
 app.use('/ext/getwalletscount', function(req,res){
   if (settings.display.richlist == true ) {
     db.get_walletscount(function(count){
@@ -82,10 +108,10 @@ app.use('/ext/getwalletscount', function(req,res){
   }
 });
 
-app.use('/ext/getnotemptywalletscount', function(req,res){
+app.use('/ext/getactivewalletscount', function(req,res){
   if (settings.display.richlist == true ) {
-    db.get_not_empty_wallet_scount(function(count){
-      res.send({not_empty_wallets_count: count});
+    db.get_active_wallets_count(function(count){
+      res.send({active_wallets_count: count});
     });
   }
 });

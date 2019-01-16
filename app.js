@@ -100,7 +100,16 @@ app.use('/ext/getstats', function(req,res){
               var coinsLockedPerc = coinsLocked / (stats.supply/100);
 
               return_hash.twins_locked = coinsLockedPerc.toFixed(2);
-              res.send(return_hash);
+
+              blocks_count = req.query.blocks_count || 300
+
+              db.get_last_txs(blocks_count, 0, function(txs){
+                time_from = txs[0].timestamp;
+                time_to = txs[txs.length-1].timestamp;
+                return_hash.average_sec_per_block = (time_from - time_to) / blocks_count;
+                res.send(return_hash);
+              });
+
             });
           });
         });

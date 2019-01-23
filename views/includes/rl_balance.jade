@@ -18,8 +18,11 @@
         tr
           td(style='text-align:center;') 
             =count
-          td 
-            a(href='/address/#{item.a_id}') #{item.a_id}
+          td
+            if settings.labels[item.a_id]
+              a(href='/address/#{item.a_id}', class='#{settings.labels[item.a_id].class}') #{item.a_id}
+            else
+              a(href='/address/#{item.a_id}') #{item.a_id}
             include ./rl_labels.jade
           td.hidden-xs
             =itemFixed.toFixed(8)

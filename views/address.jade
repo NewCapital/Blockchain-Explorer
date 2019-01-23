@@ -7,8 +7,11 @@ block content
     img.qrcode.pull-right.hidden-xs(src='/qr/#{address.a_id}')
   .col-xs-12.col-md-10.col-md-offset-1
     .panel.panel-default.panel-address-summary
-      .panel-heading(style='position:relative;')        
-        strong #{address.a_id}
+      .panel-heading(style='position:relative;')
+        if settings.labels[address.a_id]
+          strong(class='#{settings.labels[address.a_id].class}') #{address.a_id}
+        else
+          strong #{address.a_id}
         if settings.labels[address.a_id]
           if settings.labels[address.a_id].type  
             label(class='label label-#{settings.labels[address.a_id].type} pull-right hidden-xs', style='margin-left:15px;')

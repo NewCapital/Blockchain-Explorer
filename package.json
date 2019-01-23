@@ -8,7 +8,7 @@
     "test": "node ./node_modules/jasmine/bin/jasmine.js"
   },
   "dependencies": {
-    "big-integer": "^1.6.26",
+    "big-integer": "^1.6.41",
     "bignumber.js": "^4.1.0",
     "bitcoin-node-api": "0.1.0",
     "body-parser": "^1.18.3",

@@ -198,6 +198,7 @@ is_locked(function (exists) {
         } else if (database === 'cmc') {
             // update CoinMarketCap
             console.log("Updating CoinMarketCap data...");
+            // db.empty_cmc();
             db.check_cmc(settings.coinmarketcap.ticker, function(exists) {
                 if (exists === false) {
                     console.log('Run \'npm start\' to create database structures before running this script.');
@@ -205,7 +206,7 @@ is_locked(function (exists) {
                 }
 
                 db.update_coinmarketcap_db(settings.coinmarketcap.ticker, function (err) {
-                    if (err === true) {
+                    if (err) {
                         console.log('ERROR: %s: %s', settings.coinmarketcap.ticker, err);
                     }
                     else {

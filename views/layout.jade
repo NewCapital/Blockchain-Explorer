@@ -154,8 +154,8 @@ html
                   span.menu-text #{settings.locale.menu_api}
     .col-md-12
       .row.text-center
-        .col-md-2.col-md-offset-1
-          .panel.panel-default.hidden-sm.hidden-xs
+        .col-md-2.col-md-offset-1.col-xs-4
+          .panel.panel-default
             .panel-heading
               if settings.nethash_units == 'K'
                 strong #{settings.locale.network} (KH/s)
@@ -176,8 +176,8 @@ html
                label#lblX1  
               else  
                label#hashrate - 
-        .col-md-2
-          .panel.panel-default.hidden-sm.hidden-xs
+        .col-md-2.col-xs-4
+          .panel.panel-default
             .panel-heading
               strong #{settings.locale.difficulty}
             .panel-body
@@ -187,8 +187,8 @@ html
                label#difficultyHybrid -
               else
                label#difficulty -
-        .col-md-2
-          .panel.panel-default.hidden-sm.hidden-xs
+        .col-md-2.col-xs-4
+          .panel.panel-default
             .panel-heading
               strong #{settings.locale.ex_supply} (#{settings.symbol})
             .panel-body
@@ -198,8 +198,8 @@ html
                label#lblX1
               else
                label#supply -  
-        .col-md-2
-          .panel.panel-default.hidden-sm.hidden-xs
+        .col-md-2.col-md-offset-0.col-xs-4.col-xs-offset-2
+          .panel.panel-default
             .panel-heading
               strong #{settings.markets.exchange} Price
             .panel-body
@@ -209,8 +209,8 @@ html
                label#lblX1
               else
                label#lastPrice -
-        .col-md-2
-          .panel.panel-default.hidden-sm.hidden-xs
+        .col-md-2.col-xs-4
+          .panel.panel-default
             .panel-heading
               strong #{settings.locale.ex_masternodes}
             .panel-body

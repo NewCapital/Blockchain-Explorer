@@ -102,21 +102,23 @@ app.use('/ext/getstats', function(req,res){
               return_hash.twins_locked = coinsLockedPerc.toFixed(2);
 
               blocks_count = req.query.blocks_count || 300
-
-              db.get_last_txs(blocks_count, 0, function(txs){
+              
+              db.get_last_txs(1, 0, function(txs){
                 time_from = txs[0].timestamp;
-                time_to = txs[txs.length-1].timestamp;
-                return_hash.average_sec_per_block = (time_from - time_to) / blocks_count;
-                res.send(return_hash);
+                tx_blockindex = txs[0].blockindex - blocks_count;
+                db.get_tx_blockindex(tx_blockindex, function(tx){
+                  time_to = tx.timestamp;
+                  return_hash.average_sec_per_block = (time_from - time_to) / blocks_count;
+                  res.send(return_hash);
+                });
               });
-
             });
           });
         });
       });
     });
   });
-    });
+  });
 });
 
 app.use('/ext/getwalletscount', function(req,res){

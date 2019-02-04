@@ -21,6 +21,15 @@ block content
               //var amount = json.data[i]['total'] / 100000000;
               //json.data[i]['total'] = amount.toFixed(8);
               //json.data[i]['recipients'] = json.data[i]['vout'].length;
+
+              var seconds = parseInt(json.data[i]['activetime'], 10);
+              var days = Math.floor(seconds / (3600*24));
+              seconds  -= days*3600*24;
+              var hours   = Math.floor(seconds / 3600);
+              seconds  -= hours*3600;
+              var minutes = Math.floor(seconds / 60);
+              seconds  -= minutes*60;
+              json.data[i]['activetime'] = days + " Days, " + hours + " Hours, " + minutes + "Minutes";
               json.data[i]['addr'] = "<a href='/address/" + json.data[i]['addr'] + "'>" + json.data[i]['addr'] + "</a>";
             }
             return json.data;

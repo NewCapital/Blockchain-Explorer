@@ -1,6 +1,55 @@
 extends layout
 
 block content
+    script.
+        var refreshData = function () {
+            $.ajax({
+                url: "/ext/coininfo",
+                success: function (data) {
+                    $(".active")[0].firstChild.nodeValue = data.active;
+                    $(".activeMasternodes")[0].firstChild.nodeValue = data.activeMasternodes;
+                    if(data.calculatedBasedOnRealData) {
+                        $(".calculatedBasedOnRealData").hide()
+                    } else {
+                        $(".calculatedBasedOnRealData").show()
+                    }
+                    //$(".calculatedBasedOnRealData")[0].firstChild.nodeValue = data.calculatedBasedOnRealData;
+                    $(".coinsLocked")[0].firstChild.nodeValue = data.coinsLocked;
+                    $(".coinsLockedPerc")[0].firstChild.nodeValue = data.coinsLockedPerc;
+                    $(".dailyBtc")[0].firstChild.nodeValue = data.dailyBtc;
+                    $(".dailyCoin")[0].firstChild.nodeValue = data.dailyCoin;
+                    $(".dailyUsd")[0].firstChild.nodeValue = data.dailyUsd;
+                    $(".lastPriceBtc")[0].firstChild.nodeValue = data.lastPriceBtc;
+                    if (data.lastPriceUsd) {
+                        $(".lastPriceUsd").hide()
+                    } else {
+                        $(".lastPriceUsd").show()
+                    }
+                    //$(".lastPriceUsd")[0].firstChild.nodeValue = data.lastPriceUsd;
+                    $(".marketCapUsd")[0].firstChild.nodeValue = data.marketCapUsd;
+                    $(".mnRequiredCoins")[0].firstChild.nodeValue = data.mnRequiredCoins;
+                    $(".monthlyBtc")[0].firstChild.nodeValue = data.monthlyBtc;
+                    $(".monthlyCoin")[0].firstChild.nodeValue = data.monthlyCoin;
+                    $(".monthlyUsd")[0].firstChild.nodeValue = data.monthlyUsd;
+                    $(".nodeWorthBtc")[0].firstChild.nodeValue = data.nodeWorthBtc;
+                    $(".nodeWorthUsd")[0].firstChild.nodeValue = data.nodeWorthUsd;
+                    $(".supply")[0].firstChild.nodeValue = data.supply;
+                    $(".totalMasternodes")[0].firstChild.nodeValue = data.totalMasternodes;
+                    $(".weeklyBtc")[0].firstChild.nodeValue = data.weeklyBtc;
+                    $(".weeklyCoin")[0].firstChild.nodeValue = data.weeklyCoin;
+                    $(".weeklyUsd")[0].firstChild.nodeValue = data.weeklyUsd;
+                    $(".yearlyBtc")[0].firstChild.nodeValue = data.yearlyBtc;
+                    $(".yearlyCoin")[0].firstChild.nodeValue = data.yearlyCoin;
+                    $(".yearlyUsd")[0].firstChild.nodeValue = data.yearlyUsd;
+                    var pricePercChangeClass = data.pricePercChange24h ? (data.pricePercChange24h.substr(0, 1) == '-' ? 'text-danger' : 'text-success') : 'text-default';
+                    $("#pricePercChangeClass").removeAttr('class');
+                    $("#pricePercChangeClass").addClass(pricePercChangeClass);
+                }
+            });
+        };
+        setInterval(function () {
+            refreshData();
+        }, 1000 * 60);
     .col-md-12(style="margin-bottom: 4%")
         .panel.panel-default.coin-info
             .panel-heading
@@ -54,39 +103,59 @@ block content
                                                         span &nbsp;Github
                     .col-md-9
                         .panel.panel-default
+                            - var space = ' '
                             .panel-body.text-center
                                 .row.info-row
                                     .col-md-4
                                         img(src='#{settings.logo}', style='')
                                     .col-md-4
                                         h2 #{settings.coin} &nbsp(#{settings.symbol})
-                                        span #{lastPriceBtc} BTC
+                                        span
+                                            span.lastPriceBtc #{lastPriceBtc}
+                                            span  BTC
                                         if lastPriceUsd
-                                            span  / $#{lastPriceUsd} &nbsp;
-                                            - pricePercChangeClass = pricePercChange24h ? (pricePercChange24h.substr(0, 1) == '-' ? 'text-danger' : 'text-success') : 'text-default';
-                                            span(class=pricePercChangeClass) (#{pricePercChange24h}%)
+                                            span.lastPriceUsd
+                                                | #{space}
+                                                span / $
+                                                span.lastPriceUsd #{lastPriceUsd}
+                                                | &nbsp;&nbsp;
+                                                - pricePercChangeClass = pricePercChange24h ? (pricePercChange24h.substr(0, 1) == '-' ? 'text-danger' : 'text-success') : 'text-default';
+                                                span.pricePercChangeClass(class=pricePercChangeClass) (
+                                                    span.pricePercChange24h #{pricePercChange24h}
+                                                    | %)
                                 .row.info-row
                                     .col-md-4
-                                        h4 #{marketCapUsd}
+                                        h4.marketCapUsd #{marketCapUsd}
                                         h5.sub Market Cap (USD)
                                     .col-md-4
-                                        h4 #{supply} #{settings.symbol}
+                                        h4
+                                            span.supply #{supply}
+                                            span  #{settings.symbol}
                                         h5.sub Current Coin supply
                                     .col-md-4
-                                        h4 #{coinsLocked}
-                                        h5.sub Coins locked (#{coinsLockedPerc}%)
+                                        h4.coinsLocked #{coinsLocked}
+                                        h5.sub Coins locked (
+                                            span.coinsLockedPerc #{coinsLockedPerc}
+                                            |%)
                                 .row.info-row
                                     .col-md-4
-                                        h4 #{activeMasternodes} / #{totalMasternodes}
+                                        h4.activeMasternodes
+                                            span.activeMasternodes #{activeMasternodes}
+                                            | #{space}
+                                            | /
+                                            | #{space}
+                                            span.totalMasternodes #{totalMasternodes}
                                         h5.sub Active / Total nodes
                                     .col-md-4
-                                        h4 #{mnRequiredCoins} #{settings.symbol}
+                                        h4
+                                            span.mnRequiredCoins #{mnRequiredCoins}
+                                            span  #{settings.symbol}
                                         h5.sub Required coins
                                     .col-md-4
                                         h4
-                                            span #{nodeWorthBtc} BTC
-                                                //if nodeWorthUsd
-                                                span  / $#{nodeWorthUsd}
+                                            span.nodeWorthBtc #{nodeWorthBtc}
+                                            span  BTC / $
+                                            span.nodeWorthUsd #{nodeWorthUsd}
                                         h5.sub Node worth
                                 .row
                                     <hr>
@@ -97,24 +166,48 @@ block content
                                     .col-xs-2.col-md-offset-3.text-right
                                         div Daily
                                     .col-xs-10.col-md-7.text-left
-                                        div #{dailyCoin} #{settings.symbol} / #{dailyBtc} BTC / $#{dailyUsd}
+                                        div
+                                            span.dailyCoin #{dailyCoin}
+                                            span  #{settings.symbol} /
+                                            | #{space}
+                                            span.dailyBtc #{dailyBtc}
+                                            span  BTC / $
+                                            span.dailyUsd #{dailyUsd}
                                 .row.earnings
                                     .col-xs-2.col-md-offset-3.text-right
                                         div Weekly
                                     .col-xs-10.col-md-7.text-left
-                                        div #{weeklyCoin} #{settings.symbol} / #{weeklyBtc} BTC / $#{weeklyUsd}
+                                        div
+                                            span.weeklyCoin #{weeklyCoin}
+                                            span  #{settings.symbol} /
+                                            | #{space}
+                                            span.weeklyBtc #{weeklyBtc}
+                                            span  BTC / $
+                                            span.weeklyUsd #{weeklyUsd}
                                 .row.earnings
                                     .col-xs-2.col-md-offset-3.text-right
                                         div Monthly
                                     .col-xs-10.col-md-7.text-left
-                                        div #{monthlyCoin} #{settings.symbol} / #{monthlyBtc} BTC / $#{monthlyUsd}
+                                        div
+                                            span.monthlyCoin #{monthlyCoin}
+                                            span  #{settings.symbol} /
+                                            | #{space}
+                                            span.monthlyBtc #{monthlyBtc}
+                                            span  BTC / $
+                                            span.monthlyUsd #{monthlyUsd}
                                 .row.earnings
                                     .col-xs-2.col-md-offset-3.text-right
                                         div Yearly
                                     .col-xs-10.col-md-7.text-left
-                                        div #{yearlyCoin} #{settings.symbol} / #{yearlyBtc} BTC / $#{yearlyUsd}
+                                        div
+                                            span.yearlyCoin #{yearlyCoin}
+                                            span  #{settings.symbol} /
+                                            | #{space}
+                                            span.yearlyBtc #{yearlyBtc}
+                                            span  BTC / $
+                                            span.yearlyUsd #{yearlyUsd}
                                 if (calculatedBasedOnRealData)
-                                    .row &nbsp;
-                                    .row.earnings
+                                    .row.calculatedBasedOnRealData &nbsp;
+                                    .row.earnings.calculatedBasedOnRealData
                                         .col-md-offset-5.text-left
                                             em Calculations are based on real masternode payment data over the last 24h.

@@ -451,7 +451,7 @@ router.get('/ext/getmasternodesmap', function(req, res) {
           for(var i in listmasternodes)
           {
             var obj = listmasternodes[i];
-            var geo = geoip.lookup(obj.ip);
+            var geo = geoip.lookup(obj.ipaddr.split(':')[0]);
             if(geo && geo.ll && geo.ll.length > 1) {
                 mapdata.push(geo.ll[0]);
                 mapdata.push(geo.ll[1]);

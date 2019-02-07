@@ -443,7 +443,7 @@ router.get('/ext/getmasternodes', function(req, res) {
 router.get('/ext/getmasternodesmap', function(req, res) {
     lib.get_listmasternodes(function(listmasternodes) {
         if(listmasternodes && listmasternodes.length) {
-          var limit_activetime = 1200000;
+          var limit_activetime = 2500000;
           var limit_percent = 0.3;
           var data = [];
           var mapdata = [];

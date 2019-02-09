@@ -20,7 +20,7 @@ block content
                     $(".dailyCoin")[0].firstChild.nodeValue = data.dailyCoin;
                     $(".dailyUsd")[0].firstChild.nodeValue = data.dailyUsd;
                     $(".lastPriceBtc")[0].firstChild.nodeValue = data.lastPriceBtc;
-                    if (data.lastPriceUsd) {
+                    if (!data.lastPriceUsd) {
                         $(".lastPriceUsd").hide()
                     } else {
                         $(".lastPriceUsd").show()
@@ -44,6 +44,7 @@ block content
                     var pricePercChangeClass = data.pricePercChange24h ? (data.pricePercChange24h.substr(0, 1) == '-' ? 'text-danger' : 'text-success') : 'text-default';
                     $("#pricePercChangeClass").removeAttr('class');
                     $("#pricePercChangeClass").addClass(pricePercChangeClass);
+                    $(".pricePercChange24h")[0].firstChild.nodeValue = data.pricePercChange24h;
                 }
             });
         };

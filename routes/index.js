@@ -479,7 +479,7 @@ router.get('/ext/get_masternodes_and_wallets_map', function(req, res) {
                     for (var i in results.entities) {
                         ips.push({
                             ipaddr: results.entities[i].ip.split(':')[0],
-                            activetime: results.entities[i].activetime || 1000000
+                            activetime: results.entities[i].activetime || 500000
                         }); // no activetime in mysql
                     }
                 }
@@ -529,7 +529,7 @@ router.get('/ext/get_wallets_map', function(req, res) {
                     for (var i in results.entities) {
                         ips.push({
                             ipaddr: results.entities[i].ip.split(':')[0],
-                            activetime: results.entities[i].activetime || 1000000
+                            activetime: results.entities[i].activetime || 500000
                         }); // no activetime in mysql
                     }
                 }

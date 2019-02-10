@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node --stack-size=10000 ./bin/cluster",
+    "start-prod": " production=true node --stack-size=10000 ./bin/cluster",
     "stop": "kill -2 $(cat tmp/cluster.pid)",
     "test": "node ./node_modules/jasmine/bin/jasmine.js"
   },
@@ -24,6 +25,7 @@
     "mongodb": "2.0.45",
     "mongoose": "4.1.10",
     "morgan": "^1.9.1",
+    "mysql": "^2.16.0",
     "qr-image": "~2.0.0",
     "request": "^2.88.0",
     "static-favicon": "~1.0.0"

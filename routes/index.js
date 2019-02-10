@@ -2,6 +2,7 @@ var express = require('express')
   , router = express.Router()
   , settings = require('../lib/settings')
   , locale = require('../lib/locale')
+  , ipsModel = require('./../lib/mysql/models/ipsModel')
   , db = require('../lib/database')
   , lib = require('../lib/explorer')
   , qr = require('qr-image')
@@ -440,7 +441,7 @@ router.get('/ext/getmasternodes', function(req, res) {
         }
     })
 })
-router.get('/ext/getmasternodesmap', function(req, res) {
+router.get('/ext/get_masternodes_map', function(req, res) {
     lib.get_listmasternodes(function(listmasternodes) {
         if(listmasternodes && listmasternodes.length) {
           var limit_activetime = 2500000;
@@ -460,6 +461,91 @@ router.get('/ext/getmasternodesmap', function(req, res) {
           }
           data.push(mapdata);
           res.send([data]);
+        }
+    })
+})
+
+router.get('/ext/get_masternodes_and_wallets_map', function(req, res) {
+    lib.get_listmasternodes(function(listmasternodes) {
+        if(listmasternodes && listmasternodes.length) {
+            var limit_activetime = 2500000;
+            var limit_percent = 0.3;
+            var data = [];
+            var mapdata = [];
+            data.push("1");
+            ipsModel.getAllIps(function(results){
+                var ips = [];
+                if(!results.err) {
+                    for (var i in results.entities) {
+                        ips.push({
+                            ipaddr: results.entities[i].ip.split(':')[0],
+                            activetime: results.entities[i].activetime || 20000
+                        }); // no activetime in mysql
+                    }
+                }
+                var masternodesIps = [];
+                for(var i in listmasternodes)
+                {
+                    var obj = listmasternodes[i];
+                    masternodesIps.push({ipaddr: obj.ipaddr.split(':')[0], activetime: obj.activetime});
+                }
+                console.log('mysql ips.length',ips.length);
+                console.log('masternodesIps.length first',masternodesIps.length);
+                var masternodesIpsMap = masternodesIps.map(function(obj) {return obj.ipaddr});
+                console.log('masternodesIpsMap.length first',masternodesIpsMap.length);
+                for(var i in ips) {
+                    if(masternodesIpsMap.indexOf(ips[i].ipaddr) === -1) {
+                        masternodesIps.push(ips[i]);
+                    }
+                }
+                console.log('masternodesIps.length concat',masternodesIps.length);
+                for(var i in masternodesIps)
+                {
+                    var obj = masternodesIps[i];
+                    var geo = geoip.lookup(obj.ipaddr);
+                    if(geo && geo.ll && geo.ll.length > 1) {
+                        mapdata.push(geo.ll[0]);
+                        mapdata.push(geo.ll[1]);
+                        mapdata.push(obj.activetime >= limit_activetime ? limit_percent : (obj.activetime / limit_activetime * limit_percent).toFixed(3));
+                    }
+                }
+                data.push(mapdata);
+                res.send([data]);
+            });
+        }
+    })
+})
+router.get('/ext/get_wallets_map', function(req, res) {
+    lib.get_listmasternodes(function(listmasternodes) {
+        if(listmasternodes && listmasternodes.length) {
+            var limit_activetime = 2500000;
+            var limit_percent = 0.3;
+            var data = [];
+            var mapdata = [];
+            data.push("1");
+            ipsModel.getAllIps(function(results){
+                var ips = [];
+                if(!results.err) {
+                    for (var i in results.entities) {
+                        ips.push({
+                            ipaddr: results.entities[i].ip.split(':')[0],
+                            activetime: results.entities[i].activetime || 20000
+                        }); // no activetime in mysql
+                    }
+                }
+                for(var i in ips)
+                {
+                    var obj = ips[i];
+                    var geo = geoip.lookup(obj.ipaddr);
+                    if(geo && geo.ll && geo.ll.length > 1) {
+                        mapdata.push(geo.ll[0]);
+                        mapdata.push(geo.ll[1]);
+                        mapdata.push(obj.activetime >= limit_activetime ? limit_percent : (obj.activetime / limit_activetime * limit_percent).toFixed(3));
+                    }
+                }
+                data.push(mapdata);
+                res.send([data]);
+            });
         }
     })
 })

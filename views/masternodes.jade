@@ -3,6 +3,24 @@ extends layout
 block content   
   script.
     $(document).ready(function(){
+        jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+            "days-hours-minutes-pre": function (timestamp) {
+                console.log(timestamp)
+                console.log(timestamp.replace('Days','').replace('Hours','').replace('Minutes','').split(','))
+                var daysHoursMinutesArray = timestamp.replace('Days','').replace('Hours','').replace('Minutes','').split(',');
+                var days = parseInt(daysHoursMinutesArray[0]);
+                var hours = parseInt(daysHoursMinutesArray[1]);
+                var minutes = parseInt(daysHoursMinutesArray[2]);
+                var timestamp = (days * 24 * 60 * 60 + hours * 60 * 60 + minutes * 60) * 1000; // ms
+                return timestamp;
+            },
+            "days-hours-minutes-asc": function (a, b) {
+                return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+            },
+            "days-hours-minutes-desc": function (a, b) {
+                return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+            }
+        });
         var ctable = $('#connections-table').dataTable({
             autoWidth: true,
             searching: true,
@@ -11,6 +29,9 @@ block content
             lengthChange: true,
             processing: true,
             order: [],
+            columnDefs: [
+                {targets: 4, type: 'days-hours-minutes'}
+            ],
             ajax: {
                 url: '/ext/getmasternodes',
                 dataSrc: function (json) {

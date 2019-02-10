@@ -5,7 +5,7 @@ An open source block explorer written in node.js.
 
 ### See it in action
 
-* (https://explorer.win.win
+* https://explorer.win.win
 
 
 ### Requires

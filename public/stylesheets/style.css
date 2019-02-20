@@ -10,6 +10,7 @@ body {
 	background:#131313;
 	background-image: radial-gradient(rgba(0, 104, 0, .2) 25%, rgba(0, 104, 0, .2) 25%, rgba(0, 65, 0, 0.2) 50%);
 	background-repeat: no-repeat;
+	background-attachment: fixed;
 }
 
 .head {

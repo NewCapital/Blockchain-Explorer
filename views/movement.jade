@@ -34,8 +34,18 @@ block content
         autoWidth: false,      
         searching: false,
         ordering: false,
-        //responsive: true,
-        lengthChange: false,
+        responsive: true,
+        lengthChange: true,
+        processing: true,
+        language: {
+            paginate: {
+                next: '<i class="fa fa-fw fa-chevron-right">',
+                previous: '<i class="fa fa-fw fa-chevron-left">'
+            }
+        },
+        dom: "<'row'<'col-sm-12' <'wrap' <'table-custom-header'> l>>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
         //processing: true,
         ajax: {
           url: '/ext/getlasttxs/#{min_amount}',
@@ -52,6 +62,7 @@ block content
                 json .data[i]['total'] = "<label class='label label-success'>" + amount + "</label>";
               }
             }
+            $("div.table-custom-header").html("&nbsp;");
             return json.data;
           }
         },
@@ -65,9 +76,10 @@ block content
         rtable.api().ajax.reload(null, false);
       }, 45000 );
     });
-  .col-xs-12.col-md-10.col-md-offset-1(style="margin-bottom: 5%")
-    table#alerts-table.table.table-striped.table-bordered
-      thead
-        th timestamp
-        th.hidden-xs txid
-        th amount
+  .col-xs-12.col-md-12(style="margin-bottom: 5%")
+    .panel.panel-default.my-panel
+      table#alerts-table.table.table-striped.table-bordered
+        thead
+          th timestamp
+          th.hidden-xs txid
+          th amount

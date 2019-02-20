@@ -61,6 +61,15 @@ block content
         responsive: true,
         lengthChange: true,
         processing: true,
+          language: {
+              paginate: {
+                  next: '<i class="fa fa-fw fa-chevron-right">',
+                  previous: '<i class="fa fa-fw fa-chevron-left">'
+              }
+          },
+        dom: "<'row'<'col-sm-12' <'wrap' <'table-custom-header'> l>>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
         ajax: {
           url: '/ext/getlasttxs/0.00000001',
           dataSrc: function ( json ) {
@@ -73,6 +82,7 @@ block content
               json.data[i]['total'] = amount.toFixed(8);
               json.data[i]['recipients'] = json.data[i]['vout'].length;
             }
+            $("div.table-custom-header").html("#{settings.locale.ex_latest_transactions}");
             return json.data;
           }
         },
@@ -101,9 +111,7 @@ block content
           strong #{settings.locale.ex_warning} #{warning}
 
   .col-md-12
-    .panel.panel-default
-      .panel-heading
-        strong #{settings.locale.ex_latest_transactions}
+    .panel.panel-default.my-panel
       table#recent-table.table.table-bordered.table-striped
         thead
           tr

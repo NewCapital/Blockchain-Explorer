@@ -139,6 +139,9 @@ body {
 	top: 0;
 	border-width: 0 0 0px;
 }
+.navbar-fixed-bottom {
+	border-width: 0 0 0px;
+}
 .navbar-nav .active:after {
 	content: '';
 	border-left: 6px solid transparent;

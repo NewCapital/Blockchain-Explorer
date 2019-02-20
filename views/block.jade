@@ -5,7 +5,7 @@ block content
   .col-xs-12.col-md-10.col-md-offset-1
     .well.well-sm.hidden-lg.hidden-md(style='word-wrap:break-word;')
       | #{block.hash}
-    .panel.panel-default
+    .panel.panel-default.my-panel
       .panel-heading(style='padding-left:25px;padding-right:25px;')       
         .row           
           if block.previousblockhash != null
@@ -74,7 +74,7 @@ block content
       .alert.alert-info(role='alert', style='text-align:center;')   
         strong #{settings.locale.block_genesis}
     else
-      .panel.panel-default
+      .panel.panel-default.my-panel
         .panel-heading
           strong #{settings.locale.ex_latest_transactions}
         table.table.table-bordered.table-striped.summary-table 

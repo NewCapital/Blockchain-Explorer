@@ -1,12 +1,36 @@
 extends layout
 
 block content
+  script.
+      $(document).ready(function () {
+          var rtable = $('.table-custom').dataTable({
+              autoWidth: true,
+              searching: false,
+              ordering: false,
+              responsive: true,
+              lengthChange: true,
+              processing: true,
+              bDestroy: true,
+              language: {
+                  paginate: {
+                      next: '<i class="fa fa-fw fa-chevron-right">',
+                      previous: '<i class="fa fa-fw fa-chevron-left">'
+                  }
+              },
+              dom: "<'row'<'col-sm-12' <'wrap' <'table-custom-header'> l>>>" +
+              "<'row'<'col-sm-12'tr>>" +
+              "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+          })
+
+          $("div.table-custom-header").html("#{settings.locale.ex_latest_transactions}");
+      })
+
   - var balance = (address.received - address.sent) / 100000000;
   - var sent = address.sent /100000000
   - var received = address.received / 100000000
     img.qrcode.pull-right.hidden-xs(src='/qr/#{address.a_id}')
   .col-xs-12.col-md-10.col-md-offset-1
-    .panel.panel-default.panel-address-summary
+    .panel.panel-default.panel-address-summary.my-panel
       .panel-heading(style='position:relative;')
         if settings.labels[address.a_id]
           strong(class='#{settings.labels[address.a_id].class}') #{address.a_id}
@@ -42,15 +66,11 @@ block content
               if settings.show_sent_received == true
                 td #{received.toFixed(8)}
               td #{balance.toFixed(8)}
-    .panel.panel-default.hidden-xs
-      .panel-heading
-        strong #{settings.locale.ex_latest_transactions}
-      table.table.table-bordered.table-striped.history-table
-        include ./includes/address_history.jade  
-    .panel.panel-default.hidden-lg.hidden-md
-      .panel-heading
-        strong #{settings.locale.ex_latest_transactions}
-      table.table.table-bordered.table-striped
-        include ./includes/address_history.jade    
+    .panel.panel-default.hidden-xs.my-panel
+      table.table.table-bordered.table-striped.history-table.table-custom
+        include ./includes/address_history.jade
+    .panel.panel-default.hidden-lg.hidden-md.my-panel
+      table.table.table-bordered.table-striped.table-custom
+        include ./includes/address_history.jade
     .footer-padding
             

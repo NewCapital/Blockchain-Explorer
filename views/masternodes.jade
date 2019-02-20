@@ -28,6 +28,15 @@ block content
             responsive: true,
             lengthChange: true,
             processing: true,
+            language: {
+                paginate: {
+                    next: '<i class="fa fa-fw fa-chevron-right">',
+                    previous: '<i class="fa fa-fw fa-chevron-left">'
+                }
+            },
+            dom: "<'row'<'col-sm-12' <'wrap' <'table-custom-header'> lf>>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             order: [],
             columnDefs: [
                 {targets: 4, type: 'days-hours-minutes'}
@@ -54,6 +63,7 @@ block content
                         json.data[i]['activetime'] = days + " Days, " + hours + " Hours, " + minutes + "Minutes";
                         json.data[i]['addr'] = "<a href='/address/" + json.data[i]['addr'] + "'>" + json.data[i]['addr'] + "</a>";
                     }
+                    $("div.table-custom-header").html("#{settings.locale.ex_masternodes}");
                     return json.data;
                 }
             },
@@ -70,9 +80,7 @@ block content
   .col-md-12(style="margin-bottom: 4%")
     .row.text-center(style='margin-bottom:15px;')
       i #{settings.locale.net_warning}
-    .panel.panel-default
-      .panel-heading
-        strong #{settings.locale.net_connections}
+    .panel.panel-default.my-panel
       table#connections-table.table.table-bordered.table-striped
         thead
           tr

@@ -67,12 +67,12 @@ body {
 }
 @media(max-width:992px) {
 	.content {
-		padding: 0 10px 50px;
+		padding: 0 0px 50px;
 	}
 }
 @media(max-width:767px) {
 	.content {
-		padding: 0 10px 90px;
+		padding: 0 0px 90px;
 	}
 }
 .navbar-form {

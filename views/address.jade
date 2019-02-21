@@ -28,8 +28,8 @@ block content
   - var balance = (address.received - address.sent) / 100000000;
   - var sent = address.sent /100000000
   - var received = address.received / 100000000
-    img.qrcode.pull-right.hidden-md(src='/qr/#{address.a_id}')
-  .col-xs-12.col-md-10.col-md-offset-1
+    img.qrcode.pull-right.hidden-md.hidden-sm.hidden-xs(src='/qr/#{address.a_id}')
+  .col-xs-12.col-md-12.col-lg-10.col-lg-offset-1
     .panel.panel-default.panel-address-summary.my-panel
       .panel-heading(style='position:relative;')
         if settings.labels[address.a_id]
@@ -66,7 +66,7 @@ block content
               if settings.show_sent_received == true
                 td #{received.toFixed(8)}
               td #{balance.toFixed(8)}
-    .panel.panel-default.hidden-xs.my-panel
+    .panel.panel-default.hidden-sm.hidden-xs.my-panel
       table.table.table-bordered.table-striped.history-table.table-custom
         include ./includes/address_history.jade
     .panel.panel-default.hidden-lg.hidden-md.my-panel

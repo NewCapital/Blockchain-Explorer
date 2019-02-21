@@ -13,17 +13,22 @@ body {
 	background-attachment: fixed;
 }
 
+.limit-width {
+	max-width:1920px;
+	margin:0 auto;
+}
+
 .head {
-	padding: 60px 40px;
+	padding: 60px 0px;
 }
 @media(max-width:1141px) {
 	.head {
-		padding: 100px 40px 60px;
+		padding: 100px 0px 60px;
 	}
 }
 @media(max-width:767px) {
 	.head {
-		padding: 30px 40px;
+		padding: 30px 0px;
 	}
 }
 .head .panel {
@@ -58,7 +63,7 @@ body {
 	}
 }
 .content {
-	padding: 0 10px;
+	padding: 0 0px;
 }
 @media(max-width:992px) {
 	.content {
@@ -414,6 +419,19 @@ tr {
 	position: absolute;
 	top: 65px;
 	right: 15px;
+}
+.qrcode-left {
+	position: absolute;
+	top: 65px;
+	left: 15px;
+}
+@media(max-width:1540px){
+	.qrcode {
+		display:none;
+	}
+	.qrcode-left {
+		display:none;
+	}
 }
 
 .footer-logo {

@@ -7,9 +7,11 @@ tbody
   each tx in txs
     - var time = format_unixtime(tx.timestamp)
     tr
-      td.hidden-xs #{time} 
+      td.hidden-xs #{time}
       td
-        a(href='/tx/#{tx.txid}') #{tx.txid}
+        a(href='/tx/#{tx.txid}')
+          span.hidden-xs #{tx.txid}
+          span.visible-xs #{tx.txid.substr(0, 10) + '...'}
       - var done = false
       - var out = 0
       - var vin = 0

@@ -8,7 +8,8 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
  /* background-image: url('/images/background2.png');*/
 	background:#131313;
-	background-image: radial-gradient(rgba(0, 104, 0, .2) 25%, rgba(0, 104, 0, .2) 25%, rgba(0, 65, 0, 0.2) 50%);
+	/*background-image: radial-gradient(rgba(0, 104, 0, .2) 25%, rgba(0, 104, 0, .2) 25%, rgba(0, 65, 0, 0.2) 50%);*/
+	background-image: url('/images/explorer-background.png');
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 }
@@ -34,7 +35,7 @@ body {
 .head .panel {
 	border-radius:0 ;
 	margin:0;
-	/*box-shadow:0 0 145px 7px rgba(0, 104, 0, .5);*/
+	box-shadow:0 0 50px 1px rgba(57, 181, 74, .12);
 }
 @media(max-width:992px) {
 	.head .panel {

@@ -749,16 +749,20 @@ router.get('/ext/coininfo', function(req, res) {
 });
 router.get('/ext/getMarketLatestData/:market',function(req, res){
     db.get_market_latest_data(req.params.market,function(data){
-        if(data){
-            var obj = {
-                highestBid: data.stats.highestBid,
-                lowestAsk: data.stats.lowestAsk,
-                lastBtcPrice: data.stats.last,
+        db.get_cmc(settings.coingecko.ticker, function(cmc) {
+            if (data) {
+                var obj = {
+                    highestBid: data.stats.highestBid,
+                    lowestAsk: data.stats.lowestAsk,
+                    lastBtcPrice: data.stats.last,
+                    market_cap_usd: cmc.market_cap_usd,
+                    price_usd: cmc.price_usd,
+                }
+                res.send(obj);
+            } else {
+                res.send({error: "something wrong"});
             }
-            res.send(obj);
-        } else {
-            res.send({error: "something wrong"});
-        }
+        });
     })
 })
 module.exports = router;

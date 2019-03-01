@@ -173,6 +173,31 @@ app.use('/ext/get_masternode_rewards/:address/:since', function(req, res){
         }
     })
 })
+app.use('/ext/get_market_trades/:market/:since/:limit', function(req, res){
+    db.get_market_trades(req.params.market, req.params.since, req.params.limit,function(trades){
+        if(trades){
+            var order_trades = [];
+            var order_trades_string = "";
+            // trades.sort(function(a,b) {
+            //     a.timestamp = b.timestamp;
+            // })
+            for(var i in trades) {
+                var obj = {
+                    tid:trades[i].tid,
+                    timestamp:new Date(trades[i].timestamp * 1000).toLocaleString('en-IL', { timeZone: 'UTC' }),
+                    price:trades[i].price,
+                    amount:trades[i].amount
+                };
+                order_trades_string += JSON.stringify(obj) + '</br>';
+                order_trades.push(obj);
+            }
+            // res.json(trades);
+            res.send(order_trades_string);
+        } else {
+            res.send({error: "something wrong", limit: req.params.limit, since: req.params.since});
+        }
+    })
+})
 
 app.use('/ext/getdistribution', function(req,res){
   db.get_richlist(settings.coin, function(richlist){

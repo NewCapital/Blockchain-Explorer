@@ -100,8 +100,24 @@ body {
 	/*max-width: 446px;*/
 }
 #search-form input:focus {
+	/*border-color: #282828;*/
+	/*color: #888888 !important;*/
+	/*-webkit-box-shadow: 0 0 0 30px black inset;*/
+	/*-webkit-text-fill-color: #888888 !important;*/
+	/*outline:none;*/
+}
+/* Change the white to any color ;) */
+#search-form input:-webkit-autofill,
+#search-form input:-webkit-autofill:hover,
+#search-form input:-webkit-autofill:focus,
+#search-form input:-webkit-autofill:active,
+#search-form input:focus,
+#search-form input:active {
+	-webkit-box-shadow: 0 0 0 30px #000 inset !important;
+	-webkit-text-fill-color: #888888 !important;
 	border-color: #282828;
-	box-shadow: none;
+	color: #888888 !important;
+	outline:none;
 }
 @media(max-width:1141px) {
 	.navbar-form {

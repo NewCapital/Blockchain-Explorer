@@ -26,8 +26,8 @@ node_modules
 
 .idea
 *~
-*.ico
-*.png
+# *.ico
+# *.png
 
 public/analytics.json
 

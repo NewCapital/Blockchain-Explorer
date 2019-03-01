@@ -747,4 +747,18 @@ router.get('/ext/coininfo', function(req, res) {
     });
 
 });
+router.get('/ext/getMarketLatestData/:market',function(req, res){
+    db.get_market_latest_data(req.params.market,function(data){
+        if(data){
+            var obj = {
+                highestBid: data.stats.highestBid,
+                lowestAsk: data.stats.lowestAsk,
+                lastBtcPrice: data.stats.last,
+            }
+            res.send(obj);
+        } else {
+            res.send({error: "something wrong"});
+        }
+    })
+})
 module.exports = router;

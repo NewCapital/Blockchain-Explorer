@@ -52,7 +52,7 @@ block content
           dataSrc: function ( json ) {
             for ( var i=0;i<json.data.length; i++ ) {
               json.data[i]['timestamp'] = format_unixtime(json.data[i]['timestamp']);
-              json.data[i]['txid'] = "<a href='/tx/" + json.data[i]['txid'] + "' target='_blank'>" + json.data[i]['txid'] + "</a>"
+              json.data[i]['txid'] = "<a href='/tx/" + json.data[i]['txid'] + "'>" + json.data[i]['txid'] + "</a>"
               var amount = json.data[i]['total'] / 100000000;
               if (amount > '#{flagb}') {
                 json .data[i]['total'] = "<label class='label label-danger'>" + amount + "</label>";

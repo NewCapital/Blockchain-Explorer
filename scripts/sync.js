@@ -22,6 +22,7 @@ function usage() {
   console.log('');
   console.log('mode: (required for index database only)');
   console.log('update       Updates index from last sync to current block');
+  console.log('update-tx    Updates tx from genesis to current block');
   console.log('check        checks index for (and adds) any missing transactions/addresses');
   console.log('reindex      Clears index then resyncs from genesis to current block');
   console.log('');
@@ -50,12 +51,17 @@ if (process.argv[2] == 'index') {
     case 'reindex':
       mode = 'reindex';
       break;
+    case 'update-tx':
+        mode = 'update-tx';
+        break;
     default:
       usage();
     }
   }
 } else if (process.argv[2] == 'market'){
   database = 'market';
+} else if (process.argv[2] == 'market_history'){
+  database = 'market_history';
 } else if (process.argv[2] === 'cmc'){
   database = 'cmc';
 } else if (process.argv[2] === 'mnstats'){
@@ -192,6 +198,11 @@ is_locked(function (exists) {
                         });
                       });
                     });
+                  } else if(mode == 'update-tx') {
+                      db.update_address_db_only(settings.coin, 1, stats.count, settings.update_timeout, function(){
+                          console.log('update-tx complete (stats.count: %s)', stats.count);
+                          exit();
+                      });
                   }
                 });
               });
@@ -295,6 +306,43 @@ is_locked(function (exists) {
                     });
                 });
             });
+        } else if(database === 'market_history') {
+            var markets = settings.markets.enabled;
+            var complete = 0;
+            for (var x = 0; x < markets.length; x++) {
+                var market = markets[x];
+                db.check_market_history(market, function(mkt, exists) {
+                    if (exists) {
+                        db.get_market_history(market, function(data) {
+                            if(data) {
+                                db.update_markets_history_db(mkt, data, function(err) {
+                                    if (!err) {
+                                        console.log('%s market history data updated successfully.', mkt);
+                                        complete++;
+                                        if (complete == markets.length) {
+                                            exit();
+                                        }
+                                    } else {
+                                        console.log('%s: %s', mkt, err);
+                                        complete++;
+                                        if (complete == markets.length) {
+                                            exit();
+                                        }
+                                    }
+                                });
+                            } else {
+                                exit();
+                            }
+                        })
+                    } else {
+                        console.log('error: entry for %s does not exists in markets history db.', mkt);
+                        complete++;
+                        if (complete == markets.length) {
+                            exit();
+                        }
+                    }
+                });
+            }
         } else {
           //update markets
           var markets = settings.markets.enabled;

@@ -766,8 +766,16 @@ router.get('/ext/getMarketLatestData/:market',function(req, res){
     })
 })
 
-router.get('/ext/getMarketHistory/:market',function(req, res){
-    db.get_market_history(req.params.market,function(data){
+router.get('/ext/getMarketHistory/:market/:from?/:to?',function(req, res){
+    var from = 0;
+    var to = Math.floor(Date.now() / 1000);
+    if(req.params.from) {
+        from = parseInt(req.params.from);
+    }
+    if(req.params.to) {
+        to = parseInt(req.params.to);
+    }
+    db.get_market_history(req.params.market, from, to,function(data){
         if (data) {
             data.buys.sort(function(a, b) { // desc
                 return b.timestamp - a.timestamp;

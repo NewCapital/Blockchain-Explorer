@@ -313,7 +313,7 @@ is_locked(function (exists) {
                 var market = markets[x];
                 db.check_market_history(market, function(mkt, exists) {
                     if (exists) {
-                        db.get_market_history(market, function(data) {
+                        db.get_market_history(market, 0, Date.now(), function(data) {
                             if(data) {
                                 db.update_markets_history_db(mkt, data, function(err) {
                                     if (!err) {

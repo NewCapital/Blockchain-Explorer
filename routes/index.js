@@ -765,4 +765,25 @@ router.get('/ext/getMarketLatestData/:market',function(req, res){
         });
     })
 })
+
+router.get('/ext/getMarketHistory/:market',function(req, res){
+    db.get_market_history(req.params.market,function(data){
+        if (data) {
+            data.buys.sort(function(a, b) { // desc
+                return b.timestamp - a.timestamp;
+            })
+            data.sells.sort(function(a, b) { // desc
+                return b.timestamp - a.timestamp;
+            })
+            var obj = {
+                buys: data.buys,
+                sells: data.sells,
+            }
+            // res.set({'Content-Type': 'application/json; charset=utf-8'}).send(200, JSON.stringify(obj, undefined, ' '));
+            res.send(obj);
+        } else {
+            res.send({error: "something wrong"});
+        }
+    })
+})
 module.exports = router;

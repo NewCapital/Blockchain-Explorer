@@ -199,6 +199,13 @@ app.use('/ext/get_market_trades/:market/:since/:limit', function(req, res){
     })
 })
 
+app.use('/ext/getmasternodelockcount', function(req,res){
+    lib.get_masternodecount(function(masterNodesCount) {
+        var coinsLocked = masterNodesCount.total * settings.coininfo.masternode_required;
+        res.send(coinsLocked.toString());
+    });
+});
+
 app.use('/ext/getdistribution', function(req,res){
   db.get_richlist(settings.coin, function(richlist){
     db.get_stats(settings.coin, function(stats){

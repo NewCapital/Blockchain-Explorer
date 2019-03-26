@@ -104,7 +104,7 @@ function route_get_address(res, hash, count) {
     if (address) {
       var txs = [];
       var hashes = address.txs.reverse();
-      if (address.txs.length < count) {
+      if (!count || address.txs.length < count) {
         count = address.txs.length;
       }
       lib.syncLoop(count, function (loop) {
@@ -126,6 +126,36 @@ function route_get_address(res, hash, count) {
       route_get_index(res, hash + ' not found');
     }
   });
+}
+
+function route_get_address_ajax(res, hash, count) {
+    db.get_address(hash, function(address) {
+        if (address) {
+            var txs = [];
+            var hashes = address.txs.reverse();
+            if (!count || address.txs.length < count) {
+                count = address.txs.length;
+            }
+            res.render('address_ajax', { active: 'address', address: address, txs: txs});
+            // lib.syncLoop(count, function (loop) {
+            //     var i = loop.iteration();
+            //     db.get_tx(hashes[i].addresses, function(tx) {
+            //         if (tx) {
+            //             txs.push(tx);
+            //             loop.next();
+            //         } else {
+            //             loop.next();
+            //         }
+            //     });
+            // }, function(){
+            //
+            //     res.render('address_ajax', { active: 'address', address: address, txs: txs});
+            // });
+
+        } else {
+            route_get_index(res, hash + ' not found');
+        }
+    });
 }
 
 /* GET home page. */
@@ -334,12 +364,64 @@ router.get('/block/:hash', function(req, res) {
 });
 
 router.get('/address/:hash', function(req, res) {
-  route_get_address(res, req.param('hash'), settings.txcount);
+  route_get_address(res, req.param('hash'));
 });
 
 router.get('/address/:hash/:count', function(req, res) {
   route_get_address(res, req.param('hash'), req.param('count'));
 });
+
+router.get('/address_ajax/:hash', function(req, res) {
+    route_get_address_ajax(res, req.param('hash'));
+});
+
+router.post('/ext/getAddressTxs', function(req, res) {
+    var hash = req.body.hash;
+    var draw = parseInt(req.body.draw);
+    var start = parseInt(req.body.start);
+    var length = parseInt(req.body.length);
+    db.get_address(hash, function(address) {
+        if (address) {
+            var txs = [];
+            var hashes = address.txs.reverse();
+            var count = length;
+            if(address.txs.length - start < count) {
+                count = address.txs.length - start;
+            }
+            // if (!count || address.txs.length < count) {
+            //     count = address.txs.length;
+            // }
+            // if(offset && page && entries) {
+            //     count = page * offset * entries;
+            // }
+            console.log("address.txs.length",address.txs.length);
+            console.log("start",start);
+            console.log("length",length);
+            console.log("count",count);
+            lib.syncLoop(count, function (loop) {
+                var i = loop.iteration();
+                console.log("start + i",start + i)
+                db.get_tx(hashes[start + i].addresses, function(tx) {
+                    if (tx) {
+                        txs.push(tx);
+                        loop.next();
+                    } else {
+                        loop.next();
+                    }
+                });
+            }, function(){
+
+                res.send({
+                    "draw": draw,
+                    "recordsTotal": address.txs.length,
+                    "recordsFiltered": address.txs.length,
+                    data: txs
+                });
+            });
+
+        }
+    });
+})
 
 router.post('/search', function(req, res) {
   var query = req.body.search;

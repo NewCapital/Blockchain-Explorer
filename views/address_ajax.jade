@@ -83,7 +83,7 @@ block content
                           } else {
                               amount = vin / 100000000;
                           }
-                          amount = amount.toFixed(8);
+                          amount = parseFloat(amount).toFixed(8);
                           json.data[i]['amount'] = amount;
                           json.data[i]['out'] = out;
                           json.data[i]['vin'] = vin;

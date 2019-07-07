@@ -188,9 +188,13 @@ is_locked(function (exists) {
                       });
                     });
                   } else if (mode == 'update') {
+                    console.log('update started');
                     db.update_tx_db(settings.coin, stats.last, stats.count, settings.update_timeout, function(){
+                        console.log('update update_tx_db complete');
                       db.update_richlist('received', function(){
+                          console.log('update update_richlist received complete');
                         db.update_richlist('balance', function(){
+                            console.log('update update_richlist balance complete');
                           db.get_stats(settings.coin, function(nstats){
                             console.log('update complete (block: %s)', nstats.last);
                             exit();

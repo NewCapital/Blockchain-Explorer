@@ -751,12 +751,23 @@ router.get('/ext/getMarketLatestData/:market',function(req, res){
     db.get_market_latest_data(req.params.market,function(data){
         db.get_cmc(settings.coingecko.ticker, function(cmc) {
             if (data) {
-                var obj = {
-                    highestBid: data.stats.highestBid,
-                    lowestAsk: data.stats.lowestAsk,
-                    lastBtcPrice: data.stats.last,
-                    market_cap_usd: cmc.market_cap_usd,
-                    price_usd: cmc.price_usd,
+                if(req.params.market === 'bitsane') {
+                    var obj = {
+                        highestBid: data.stats.highestBid,
+                        lowestAsk: data.stats.lowestAsk,
+                        lastBtcPrice: data.stats.last,
+                        market_cap_usd: cmc.market_cap_usd,
+                        price_usd: cmc.price_usd,
+                    }
+                }
+                if(req.params.market === 'newCapital') {
+                    var obj = {
+                        bidPrice: data.stats.bidPrice,
+                        askPrice: data.stats.askPrice,
+                        lastPrice: data.stats.lastPrice,
+                        market_cap_usd: cmc.market_cap_usd,
+                        price_usd: cmc.price_usd,
+                    }
                 }
                 res.send(obj);
             } else {

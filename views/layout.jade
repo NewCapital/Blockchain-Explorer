@@ -40,13 +40,19 @@ html
           $.ajax({url: '/ext/summary', success: function(json){
               console.log(json.data[0].masternodesCount.total)
               console.log($("#masternodes")[0])
+              // var lastBtcPrice = 100000000 / json.data[0].lastPrice (twins price) / 100000000;
+              const lastBtcPrice = json.data[0].lastPrice;
+              const lastSatPrice = lastBtcPrice * 100000000;
+              const lastTwinsPrice = 100000000 / lastSatPrice;
+              const toolTipContent = lastSatPrice.toFixed(8) + ' SAT/TWINS<br>' + parseInt(lastTwinsPrice.toString()) + ' TWINS/BTC'
             $("#supply").text(json.data[0].supply);
             $("#difficulty").text(json.data[0].difficulty);
             $("#difficultyHybrid").text(json.data[0].difficultyHybrid);
             $("#masternodes").text(json.data[0].masternodesCount.total);
             $("#masternodesHybrid").text(json.data[0].masternodesCount.total);
             $("#hashrate").text(json.data[0].hashrate);
-            $("#lastPrice").text(json.data[0].lastPrice.toFixed(8));
+            $("#lastPrice").text(lastBtcPrice.toFixed(8));
+            $("#priceToolTip").attr('data-original-title', toolTipContent).tooltip({container: 'body'})
             $("#lblConnections").html('<span>' + json.data[0].connections + '</span> connections');
             $("#lblBlockcount").html('<span>' + json.data[0].blockcount + '</span> blocks');
             $("#lblX1").text(' ');
@@ -209,7 +215,7 @@ html
                 else
                  span#supply -
           .col-md-2.col-md-2-4.col-md-offset-0.col-xs-4.col-xs-offset-2
-            .panel
+            .panel( id="priceToolTip" data-toggle="tooltip" data-placement="top" data-html="true")
               .panel-heading
                 strong #{settings.markets.exchange} Price
               .panel-body
